@@ -408,8 +408,8 @@ function Contact() {
                   021-34680936
                 </a>
                 <br />
-                <a href="tel:+923212697888" className="hover:text-primary">
-                  0321-2697888
+                <a href="tel:+923493196151" className="hover:text-primary">
+                  0349-3196151
                 </a>
                 <br />
                 <span className="text-muted-foreground">Fax: 021-34680935</span>
