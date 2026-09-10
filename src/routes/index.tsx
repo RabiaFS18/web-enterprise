@@ -418,10 +418,10 @@ function Contact() {
             <div className="flex gap-3">
               <Mail className="mt-0.5 h-5 w-5 shrink-0 text-primary" strokeWidth={1.75} />
               <a
-                href="mailto:rk_enterprises2011@hotmail.com"
+                href="mailto:info@rk-enterprises.org"
                 className="text-sm text-foreground hover:text-primary"
               >
-                rk_enterprises2011@hotmail.com
+                info@rk-enterprises.org
               </a>
             </div>
             <img src={logo} alt="R.K. Enterprises" className="h-24 w-auto opacity-90" />
