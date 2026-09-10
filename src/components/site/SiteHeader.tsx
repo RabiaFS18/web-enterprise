@@ -42,10 +42,10 @@ export function SiteHeader() {
           </Link>
           <Link
             to="/signin"
-            className="hidden items-center gap-2 rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium text-foreground shadow-sm transition-colors hover:bg-secondary md:inline-flex"
+            className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium text-foreground shadow-sm transition-colors hover:bg-secondary"
           >
             <User className="h-4 w-4" strokeWidth={1.75} />
-            Sign in
+            <span className="hidden sm:inline">Sign in</span>
           </Link>
           <Link
             to="/"
