@@ -37,15 +37,28 @@ function SignInPage() {
     setLoading(true);
     setError(null);
 
-    const { error: signInError } = await supabase.auth.signInWithPassword({
+    const { data, error: signInError } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
+    if (signInError || !data.user) {
+      setError("Email ya password galat hai. Dobara try karo.");
+      setLoading(false);
+      return;
+    }
+
+    // Check if admin
+    const { data: roleData } = await supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", data.user.id)
+      .single();
+
     setLoading(false);
 
-    if (signInError) {
-      setError("Email ya password galat hai. Dobara try karo.");
+    if (roleData?.role === "admin") {
+      navigate({ to: "/admin" });
     } else {
       navigate({ to: "/" });
     }
@@ -103,7 +116,7 @@ function SignInPage() {
             </div>
 
             {error && (
-              <p className="mt-4 rounded-lg bg-destructive/10 px-4 py-3 text-sm text-destructive">
+              <p className="mt-4 rounded-lg bg-red-500/10 px-4 py-3 text-sm text-red-500">
                 {error}
               </p>
             )}

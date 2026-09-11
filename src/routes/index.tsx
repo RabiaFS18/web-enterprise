@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
 import { ArrowRight, Mail, MapPin, Phone } from "lucide-react";
+import { supabase } from "../integrations/supabase/client";
 import { SiteHeader } from "../components/site/SiteHeader";
 import { SiteFooter } from "../components/site/SiteFooter";
 import { SceneBackground } from "../components/site/SceneBackground";
@@ -300,9 +301,20 @@ function About() {
 
 function Contact() {
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setSending(true);
+    const form = new FormData(e.currentTarget);
+    await supabase.from("enquiries").insert({
+      name: form.get("name") as string,
+      email: form.get("email") as string,
+      phone: (form.get("phone") as string) || null,
+      message: `Company: ${form.get("company") || "N/A"}\n\n${form.get("requirement")}`,
+      status: "new",
+    });
+    setSending(false);
     setSent(true);
   };
 
@@ -376,9 +388,10 @@ function Contact() {
 
               <button
                 type="submit"
-                className="mt-6 inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+                disabled={sending || sent}
+                className="mt-6 inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
               >
-                {sent ? "Enquiry received" : "Send enquiry"}
+                {sent ? "Enquiry received" : sending ? "Sending..." : "Send enquiry"}
                 <ArrowRight className="h-4 w-4" strokeWidth={2} />
               </button>
               {sent && (
