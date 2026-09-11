@@ -1,7 +1,9 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
+import { useState, type FormEvent } from "react";
 import { SiteHeader } from "../components/site/SiteHeader";
 import { SiteFooter } from "../components/site/SiteFooter";
+import { supabase } from "../integrations/supabase/client";
 import logo from "../assets/rk-logo.png";
 
 const TITLE = "Sign in — R.K. Enterprises";
@@ -20,9 +22,34 @@ export const Route = createFileRoute("/signin")({
 });
 
 function SignInPage() {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const field =
     "mt-2 w-full rounded-lg border border-input bg-surface px-3 py-2.5 text-sm outline-none transition-colors placeholder:text-muted-foreground/70 focus:border-primary focus:ring-2 focus:ring-ring/25";
   const label = "text-[11px] font-bold uppercase tracking-[0.16em] text-muted-foreground";
+
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    setLoading(false);
+
+    if (signInError) {
+      setError("Email ya password galat hai. Dobara try karo.");
+    } else {
+      navigate({ to: "/" });
+    }
+  };
 
   return (
     <>
@@ -45,12 +72,7 @@ function SignInPage() {
             Contract holders can sign in to review quotations and deployment records.
           </p>
 
-          <form
-            className="mt-7"
-            onSubmit={(e) => {
-              e.preventDefault();
-            }}
-          >
+          <form className="mt-7" onSubmit={onSubmit}>
             <div>
               <label className={label} htmlFor="si-email">
                 Email
@@ -61,19 +83,37 @@ function SignInPage() {
                 required
                 placeholder="you@company.com"
                 className={field}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div className="mt-5">
               <label className={label} htmlFor="si-password">
                 Password
               </label>
-              <input id="si-password" type="password" required placeholder="••••••••" className={field} />
+              <input
+                id="si-password"
+                type="password"
+                required
+                placeholder="••••••••"
+                className={field}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </div>
+
+            {error && (
+              <p className="mt-4 rounded-lg bg-destructive/10 px-4 py-3 text-sm text-destructive">
+                {error}
+              </p>
+            )}
+
             <button
               type="submit"
-              className="mt-7 w-full rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+              disabled={loading}
+              className="mt-7 w-full rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
             >
-              Sign in
+              {loading ? "Signing in..." : "Sign in"}
             </button>
           </form>
         </div>
