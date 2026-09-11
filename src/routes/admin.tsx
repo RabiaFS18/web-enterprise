@@ -237,7 +237,7 @@ function ProductsTab() {
         </div>
       ) : products.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-border py-16 text-center text-muted-foreground">
-          Koi product nahi — "Add Product" se banao
+          No products found — click "Add Product" to create one
         </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -398,7 +398,7 @@ function ServicesTab() {
         </div>
       ) : services.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-border py-16 text-center text-muted-foreground">
-          Koi service nahi — "Add Service" se banao
+          No services found — click "Add Service" to create one
         </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2">
@@ -475,7 +475,7 @@ function EnquiriesTab() {
         </div>
       ) : enquiries.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-border py-16 text-center text-muted-foreground">
-          Abhi tak koi enquiry nahi aayi
+          No enquiries received yet
         </div>
       ) : (
         <div className="space-y-3">
